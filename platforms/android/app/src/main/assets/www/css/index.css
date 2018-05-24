@@ -1,0 +1,69 @@
+
+#cameraBtn{
+  padding: 10px;
+  display: inline;
+  border-radius: 2px;
+  font-family: "Arial";
+  border: 0;
+  margin: 0 10px;
+  background: red;
+  font-size: 15px;
+  line-height: 15px;
+  color: white;
+  width: auto;
+  height: auto;
+
+  border-radius: 10px;
+     background: #e1f59f;
+  background-image: -webkit-linear-gradient(top, #e1f59f, #d48524);
+  background-image: -moz-linear-gradient(top, #e1f59f, #d48524);
+  background-image: -ms-linear-gradient(top, #e1f59f, #d48524);
+  background-image: -o-linear-gradient(top, #e1f59f, #d48524);
+  background-image: linear-gradient(to bottom, #e1f59f, #d48524);
+  -webkit-border-radius: 60;
+  -moz-border-radius: 60;
+  border-radius: 60px;
+  font-family: Georgia;
+  color: #ffffff;
+
+  text-decoration: none;
+
+
+
+  background: #e03ae0;
+  background-image: -webkit-linear-gradient(top, #e03ae0, #3498db);
+  background-image: -moz-linear-gradient(top, #e03ae0, #3498db);
+  background-image: -ms-linear-gradient(top, #e03ae0, #3498db);
+  background-image: -o-linear-gradient(top, #e03ae0, #3498db);
+  background-image: linear-gradient(to bottom, #e03ae0, #3498db);
+  text-decoration: none;
+  position: absolute;
+     bottom: 0;
+     right:0;
+}
+,
+#myImage
+{
+  margin-top: 100px;
+}
+#addStoreName{
+  width: 70px;
+height: 70px;
+padding: 10px 16px;
+font-size: 24px;
+border-radius: 35px;
+position: absolute;
+   bottom: 0;
+   right:0;
+}
+#box {
+    width: 300px;
+    border: 25px solid green;
+    padding: 25px;
+    margin: 25px;
+}
+#dateTime2{
+  position: absolute;
+
+     right:0;
+}
