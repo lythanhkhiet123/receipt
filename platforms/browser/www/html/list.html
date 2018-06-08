@@ -7,12 +7,16 @@
     <meta name="msapplication-tap-highlight" content="no" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
     <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' gap:; style-src 'self' 'unsafe-inline'; media-src *" />
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/index.css" />
     <title>Hello World</title>
     <style>
-      #myImage{
+      .myImage{
         max-width: 100%;
+
+      }
+      .date{
+        float:right;
       }
     </style>
 </head>
@@ -20,51 +24,172 @@
 
 <body>
   <div id="header">
-
+    <h1 align="center">All Receipts</h1>
   </div>
-  <button id ="cameraBtn" onclick="getPicture()">Picture</button>
+  <button id ="cameraBtn" onclick="getPicture()"><img src="../img/cameraIcon.png" width="100px" height="100px"></button>
   <p id="msg"></p>
-  <input type="text" id="fname">
-  <img src="" id="myImage" >
+
+  <ul id="myImages">
+  </ul>
   <br>
   <br>
 
 
   <script type="text/javascript">
   document.addEventListener("deviceready", zdeviceready, false);
+
   function zdeviceready()
   {
     var storage = window.localStorage;
-    var value = storage.getItem('itemClicked');
-    alert(value);
-  }
+    var storeID = storage.getItem('itemClicked');
+    var userID = storage.getItem('userID');
+    var location = new Array();
+    var captureDate = new Array();
+    var cost = new Array();
+    $.ajax({
+        type: "post",
+        url: "https://5931.000webhostapp.com/get_receipt_receipt.php",
+        data : {storeID, userID},
+        success: function (data) {
+          var obj = JSON.parse(data);
+          location = obj[0];
+          captureDate = obj[1];
+          cost = obj[2];
+          for(var i=0; i<location.length;i++)
+          {
+            var images = document.getElementById(('myImages'));
 
-  function getPicture(){
+            var img = document.createElement("img");
+            var span = document.createElement("span");
+            var txt = document.createTextNode(captureDate[i]);
+            var span2 = document.createElement('span');
+            var txt2 = document.createTextNode("$"+cost[i]);
+            span.setAttribute('class','date');
 
-    navigator.camera.getPicture(
-      function(imageURI){
-        var image = document. getElementById('myImage');
+            span.appendChild(txt);
+            span2.appendChild(txt2);
 
-        image.src = imageURI;
-        document.getElementById('fname').value = 'dadsa';
-      },
-      function(message){
-        alert('failed because: '+ message);
+            img.setAttribute('src',location[i]);
+            img.setAttribute('class',"myImage");
+
+            var li = document.createElement("li");
+            li.appendChild(img);
+            li.appendChild(span2);
+            li.appendChild(span);
+            images.appendChild(li);
+
+
+          }
+
+
+
+
         },
-        {
-          quality:50,
-          destinationType:Camera.DestinationType.FILE_URI
+        error: function (request, status, error) {
+            alert(request.responseText);
         }
 
+    });
+
+
+  }
+  function onPrompt(results) {
+      if (isNaN(results.input1))
+      {
+        alert("Must input numbers");
+      }else if ( results.input1 === "")
+      {
+            alert("Please enter the field");
+      }
+      else
+      {
+        navigator.camera.getPicture(
+          function(imageURI){
+            // var image = document. getElementById('myImage');
+            var storage = window.localStorage;
+            var storeID = storage.getItem('itemClicked');
+            var userID = storage.getItem('userID');
+            var images = document.getElementById(('myImages'));
+            var img = document.createElement("img");
+            img.setAttribute('src',imageURI);
+            img.setAttribute('class',"myImage");
+
+
+            var li = document.createElement("li");
+            li.appendChild(img);
+            images.appendChild(li);
+
+            var currentdate = new Date();
+
+
+            var datetime =
+                            currentdate.getFullYear() + "-"
+                            + (currentdate.getMonth()+1)  + "-"
+                            + currentdate.getDate();
+            var location = imageURI;
+            var captureDate = datetime;
+            var span = document.createElement('span');
+            var txt = document.createTextNode(captureDate);
+            var cost = results.input1;
+
+            var span2 = document.createElement('span');
+            var txt2 = document.createTextNode("$"+cost);
+            span.setAttribute('class','date');
+            span.appendChild(txt);
+
+            span2.appendChild(txt2);
+            li.appendChild(span2);
+            li.appendChild(span);
+            $.ajax({
+                type: "post",
+                url: "https://5931.000webhostapp.com/save_receipt_receipt.php",
+                data : {location,cost,captureDate,storeID, userID},
+                success: function (data, text) {
+
+                    alert(data);
+
+
+
+                },
+                error: function (request, status, error) {
+                    alert(request.responseText);
+                }
+
+            });
+
+
+          },
+          function(message){
+            alert('failed because: '+ message);
+            },
+            {
+              quality:50,
+              destinationType:Camera.DestinationType.FILE_URI
+            }
+
+        );
+      }
+  }
+  function getPicture(){
+    var options = ["Cancel","OK"];
+
+
+    navigator.notification.prompt(
+      "Please the cost of the receipt:",
+      this.onPrompt,
+      "Enter bills",
+      options
     );
+
+
+
   }
 
   </script>
+
     <script type="text/javascript" src="../cordova.js"></script>
 
-<!-- Content -->
 
-<!-- End content -->
 </body>
 
 </html>
